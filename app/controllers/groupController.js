@@ -223,10 +223,11 @@ exports.deleteGroup = async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const group = await prisma.group.delete({
+    const group = await prisma.group.update({
       where: {
         id: Number(groupId),
       },
+      data: { isDeleted: true },
     });
 
     res.status(200).json(group);

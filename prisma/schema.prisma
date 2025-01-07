@@ -28,6 +28,7 @@ model Group {
   description String? // Optional description of the group
   createdAt   DateTime @default(now()) // When the group was created
   updatedAt   DateTime @updatedAt // Automatically updates when the group is modified
+  isDeleted   Boolean  @default(false)
 
   // Relationships: A group has many members (GroupUser) and multiple expenses
   members  GroupUser[]
