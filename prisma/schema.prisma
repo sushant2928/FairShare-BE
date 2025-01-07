@@ -3,81 +3,64 @@ generator client {
 }
 
 datasource db {
-   provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// User model stores user details and balance information
 model User {
-  id       Int    @id @default(autoincrement()) // Auto-incrementing primary key
-  name     String // User's full name
-  email    String @unique // Unique email for user
-  uid      String @unique // User's auth uid
-  balance  Float  @default(0) // User's overall balance (default 0)
-
-  // Relationships: A user can belong to multiple groups and have multiple expenses
-  groups       GroupUser[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  balance      Float          @default(0)
+  uid          String         @unique
   expenses     Expense[]
   ExpenseSplit ExpenseSplit[]
+  groups       GroupUser[]
 }
 
-// Group model stores group details like name, description, and members
 model Group {
-  id          Int      @id @default(autoincrement()) // Auto-incrementing primary key
-  name        String // Group's name (e.g., "Trip to Goa")
-  description String? // Optional description of the group
-  createdAt   DateTime @default(now()) // When the group was created
-  updatedAt   DateTime @updatedAt // Automatically updates when the group is modified
-  isDeleted   Boolean  @default(false)
-
-  // Relationships: A group has many members (GroupUser) and multiple expenses
-  members  GroupUser[]
-  expenses Expense[]
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isDeleted   Boolean     @default(false)
+  expenses    Expense[]
+  members     GroupUser[]
 }
 
-// GroupUser model stores the relationship between users and groups
 model GroupUser {
-  id      Int    @id @default(autoincrement()) // Auto-incrementing primary key
-  uid     String // Foreign key to User's UID
-  groupId Int    // Foreign key to Group
-  balance Float  @default(0) // The user's balance within the group (e.g., how much they owe or are owed)
-  // name    String
-  // Relations: A GroupUser links a User to a Group
-  user  User  @relation(fields: [uid], references: [uid]) // Foreign key to User (UID is used here)
-  group Group @relation(fields: [groupId], references: [id]) // Foreign key to Group
+  id      Int    @id @default(autoincrement())
+  groupId Int
+  balance Float  @default(0)
+  uid     String
+  group   Group  @relation(fields: [groupId], references: [id])
+  user    User   @relation(fields: [uid], references: [uid])
 
-  // Ensures a user can only join a group once
   @@unique([uid, groupId])
 }
 
-// Expense model stores information about expenses, including the payer and the group
 model Expense {
-  id          Int       @id @default(autoincrement()) // Auto-incrementing primary key
-  description String    // Description of the expense (e.g., "Dinner at Restaurant")
-  amount      Float     // Total amount of the expense
-  payerId     String    // Foreign key to User's UID who paid for the expense
-  groupId     Int?      // Optional foreign key to Group (nullable if not part of a group)
-  status      String    @default("pending") // Status of the expense (e.g., "pending", "paid", "settled")
-  createdAt   DateTime  @default(now()) // When the expense was created
-  deletedAt   DateTime? // Nullable field for soft deletes (timestamp when the expense was deleted)
-
-  // Relations: The expense has a payer (User) and optionally a group
-  payer        User           @relation(fields: [payerId], references: [uid]) // Foreign key to User's UID
-  group        Group?         @relation(fields: [groupId], references: [id]) // Foreign key to Group (nullable)
+  id           Int            @id @default(autoincrement())
+  description  String
+  amount       Float
+  payerId      String
+  groupId      Int?
+  status       String         @default("pending")
+  createdAt    DateTime       @default(now())
+  deletedAt    DateTime?
+  group        Group?         @relation(fields: [groupId], references: [id])
+  payer        User           @relation(fields: [payerId], references: [uid])
   ExpenseSplit ExpenseSplit[]
 
-  // Indexes for faster querying (groupId is optional)
   @@index([groupId])
 }
 
-// ExpenseSplit model stores how an expense is split among users
 model ExpenseSplit {
-  id        Int    @id @default(autoincrement()) // Auto-incrementing primary key
-  expenseId Int    // Foreign key to Expense
-  uid       String // Foreign key to User's UID
-  share     Float  // The share of the expense (positive if owed, negative if they owe)
-
-  // Relations: An ExpenseSplit links a User to an Expense
-  expense Expense @relation(fields: [expenseId], references: [id]) // Foreign key to Expense
-  user    User    @relation(fields: [uid], references: [uid]) // Foreign key to User's UID
+  id        Int     @id @default(autoincrement())
+  expenseId Int
+  share     Float
+  uid       String
+  expense   Expense @relation(fields: [expenseId], references: [id])
+  user      User    @relation(fields: [uid], references: [uid])
 }
