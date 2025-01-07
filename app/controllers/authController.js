@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
     console.log(JSON.stringify({ user }));
     res.status(201).json({ user });
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     console.log(err?.message || "");
     res.status(500).json({ message: "Server error" });
   } finally {
@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
     }
     res.status(200).json({ user });
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     console.log(JSON.stringify({ err: err.message }));
     res.status(500).json({ message: "Server error" });
   } finally {
@@ -71,7 +71,7 @@ exports.findUser = async (req, res) => {
     }
     res.status(200).json({ user: Array.isArray(user) ? user : [user] });
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     console.log(JSON.stringify({ err: err.message }));
     res.status(500).json({ message: "Server error" });
   } finally {

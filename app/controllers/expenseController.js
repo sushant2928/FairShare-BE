@@ -27,7 +27,7 @@ exports.createExpense = async (req, res) => {
 
     res.status(201).json(expense);
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     res.status(500).json({ message: "Error creating expense" });
   } finally {
     prisma.$disconnect();

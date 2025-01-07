@@ -27,7 +27,7 @@ exports.createGroup = async (req, res) => {
     });
     res.status(201).json(group);
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     console.log("🚀 ~ exports.createGroup= ~ err:", err);
     res.status(500).json({ message: "Error creating group" });
   } finally {
@@ -71,7 +71,7 @@ exports.getGroups = async (req, res) => {
 
     res.status(200).json(result);
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     res.status(500).json({ message: "Error fetching groups" });
   } finally {
     prisma.$disconnect();
@@ -94,7 +94,7 @@ exports.getGroup = async (req, res) => {
 
     res.status(200).json(group);
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     res.status(500).json({ message: "Error fetching group" });
   } finally {
     prisma.$disconnect();
@@ -151,7 +151,7 @@ exports.getGroupExpenses = async (req, res) => {
       res.status(200).json(expenses);
     }
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     res.status(500).json("Error fetching group expenses");
   } finally {
     prisma.$disconnect();
@@ -209,7 +209,7 @@ exports.addUserToGroup = async (req, res) => {
       });
     } else throw new Error("No member added!");
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     res.status(500).json({
       message: "Error adding member to the group",
       error: err.message,
@@ -231,7 +231,7 @@ exports.deleteGroup = async (req, res) => {
 
     res.status(200).json(group);
   } catch (err) {
-    console.log("🚀 ~ err:", err);
+    console.log("🚀 ~ err:", err?.message);
     res.status(500).json({ message: "Error fetching group" });
   } finally {
     prisma.$disconnect();

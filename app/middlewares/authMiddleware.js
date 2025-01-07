@@ -9,7 +9,7 @@ const authenticate = async (req, res, next) => {
     req.body.email = email;
     next();
   } catch(err){
-console.log("🚀 ~ err:", err);
+console.log("🚀 ~ err:", err?.message);
     res.status(401).json({ message: "Unauthorized" });
   }
 };
