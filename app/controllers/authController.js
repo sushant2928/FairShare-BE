@@ -15,10 +15,12 @@ exports.register = async (req, res) => {
     });
     console.log(JSON.stringify({ user }));
     res.status(201).json({ user });
-  } catch(err){
-console.log("🚀 ~ err:", err);
+  } catch (err) {
+    console.log("🚀 ~ err:", err);
     console.log(err?.message || "");
     res.status(500).json({ message: "Server error" });
+  } finally {
+    prisma.$disconnect();
   }
 };
 
@@ -30,10 +32,12 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     res.status(200).json({ user });
-  } catch(err){
-console.log("🚀 ~ err:", err);
+  } catch (err) {
+    console.log("🚀 ~ err:", err);
     console.log(JSON.stringify({ err: err.message }));
     res.status(500).json({ message: "Server error" });
+  } finally {
+    prisma.$disconnect();
   }
 };
 
@@ -66,9 +70,11 @@ exports.findUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     res.status(200).json({ user: Array.isArray(user) ? user : [user] });
-  } catch(err){
-console.log("🚀 ~ err:", err);
+  } catch (err) {
+    console.log("🚀 ~ err:", err);
     console.log(JSON.stringify({ err: err.message }));
     res.status(500).json({ message: "Server error" });
+  } finally {
+    prisma.$disconnect();
   }
 };

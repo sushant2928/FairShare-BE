@@ -29,6 +29,8 @@ exports.createExpense = async (req, res) => {
   } catch (err) {
     console.log("🚀 ~ err:", err);
     res.status(500).json({ message: "Error creating expense" });
+  } finally {
+    prisma.$disconnect();
   }
 };
 
@@ -70,6 +72,8 @@ exports.getExpense = async (req, res) => {
   } catch (err) {
     console.log("🚀 ~ exports.getExpense= ~ err:", err);
     res.status(500).json({ message: "Error fetching expenses" });
+  } finally {
+    prisma.$disconnect();
   }
 };
 exports.addExpense = async (req, res) => {
@@ -153,5 +157,7 @@ exports.addExpense = async (req, res) => {
   } catch (error) {
     console.error("Error adding expense:", error);
     res.status(500).json({ error: "Internal server error" });
+  } finally {
+    prisma.$disconnect();
   }
 };
