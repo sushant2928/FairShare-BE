@@ -41,6 +41,7 @@ exports.getGroups = async (req, res) => {
   try {
     const groups = await prisma.group.findMany({
       where: {
+        isDeleted: false,
         members: {
           some: {
             uid, // Ensure the user is a member of the group
